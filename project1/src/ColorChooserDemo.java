@@ -42,7 +42,9 @@
   */
  
 import java.awt.*;
+import java.util.concurrent.Callable;
 
+import javax.security.auth.callback.Callback;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.colorchooser.*;
@@ -50,7 +52,7 @@ import javax.swing.colorchooser.*;
 /* ColorChooserDemo.java requires no other files. */
 public class ColorChooserDemo extends JPanel
                               implements ChangeListener {
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
@@ -63,6 +65,7 @@ public class ColorChooserDemo extends JPanel
  
     public ColorChooserDemo() {
         super(new BorderLayout());
+        
  
         /* Set up the banner at the top of the window
         banner = new JLabel("Welcome to the Tutorial Zone!",
@@ -90,6 +93,7 @@ public class ColorChooserDemo extends JPanel
         // Remove panels but RGB
         for (int i=0; i<oldPanels.length; i++) {
         	String clsName = oldPanels[i].getClass().getName();
+        	//System.out.println("Panelname "+oldPanels[i].getDisplayName());
   
         	if (clsName.equals("javax.swing.colorchooser.DefaultSwatchChooserPanel")) {
              // Remove swatch chooser if desired
@@ -101,11 +105,13 @@ public class ColorChooserDemo extends JPanel
              tcc.removeChooserPanel(oldPanels[i]);
         	} 
         	*/ 
-        	else if (oldPanels[i].getDisplayName().equals("TSV")) {
+        	else if (oldPanels[i].getDisplayName().equals("TSV") |
+        			oldPanels[i].getDisplayName().equals("HSV")) {
              // Remove tsv = hsb chooser if desired
              tcc.removeChooserPanel(oldPanels[i]);
         	}
-        	else if (oldPanels[i].getDisplayName().equals("TSL")) {
+        	else if (oldPanels[i].getDisplayName().equals("TSL") |
+        			oldPanels[i].getDisplayName().equals("HSL")) {
         	 // Remove tsl = hsl panel
         	tcc.removeChooserPanel(oldPanels[i]);
         	}
@@ -156,6 +162,7 @@ public class ColorChooserDemo extends JPanel
         
     }
  
+    
     public static void main(String[] args) {
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
@@ -167,7 +174,7 @@ public class ColorChooserDemo extends JPanel
     }
     
     /*
-     * 
+     * 	This runnable is for threading techniques
      */
     class RunImpl implements Runnable {
     	  private ColorChooserDemo ccd = null;
@@ -183,6 +190,30 @@ public class ColorChooserDemo extends JPanel
     	  }                           
      } // End of Runimpl class   
     
-}
+    /*
+     * This callable is for the execute technique
+     */
+    class Task implements Callable<Color> {
+        public Color call() throws Exception {
+            Thread.sleep(2000);
+            return newColor;
+        }
+    }
+
+    /*
+     * This calls implements an interface
+     */
+    interface CallBack {
+    	void callback();			// default method 
+    	
+    }
+    
+    public class ColorItem implements Callback {
+    	void callback() {			// override method
+    		System.out.println("callback run");
+    	}
+    }
+ 
+} // End of class ColorChooserDemo 
 
 
